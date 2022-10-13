@@ -29,7 +29,7 @@ end
 max_str = ordered_files.map(&:length).max + 2
 
 ordered_files.each_with_index do |file, idx|
-  if idx % 3 == 2
+  if idx % 3 == 2 || (files_num - 1) == idx
     print "#{file.to_s.ljust(max_str)}\n"
   else
     print "#{file.to_s.ljust(max_str)}"
