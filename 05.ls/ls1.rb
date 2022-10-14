@@ -17,7 +17,7 @@ if files_num > column_num # 列数よりファイル数の方が多い場合は�
   ordered_files = []
   split_length.times do |i|
     column_num.times do |j|
-      if !split_array[j][i].nil?
+      if !split_array[j].nil? && !split_array[j][i].nil?
         ordered_files << split_array[j][i]
       else
         ordered_files << ""
