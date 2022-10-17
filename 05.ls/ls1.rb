@@ -1,40 +1,52 @@
-column_num = 3 # 出力時の列数
+column_num = 3 # 出力列数
 current_dir_files = Dir.glob("*").sort # ファイル一覧の読み込み
 files_num = current_dir_files.size # ファイル数
 max_str = current_dir_files.map(&:length).max + 2 # ファイル名の最大文字数
+row_num = files_num / column_num # 出力行数
 
-if files_num > column_num # 列数よりファイル数の方が多い場合は、垂直ソートしてから出力する
-  # 列数に合わせてファイル名一覧の配列を分割
+if files_num > column_num
   if files_num % column_num  != 0
-    row_num = (files_num / column_num ) + 1
-  else
-    row_num = files_num / column_num 
-  end
-
-  split_array = current_dir_files.each_slice(row_num).to_a
-
-  # 垂直ソートした配列を生成
-  ordered_files = []
-  row_num.times do |i|
-    column_num.times do |j|
-      if !split_array[j].nil? && !split_array[j][i].nil?
-        ordered_files << split_array[j][i]
-      else
-        ordered_files << ""
+    row_nums = Array.new(column_num, row_num)
+    mod = files_num % column_num
+    mod.times do |i|
+      row_nums[i] = row_nums[i] + 1
+    end
+    row_num += 1
+    pt = 0
+    row_num.times do |row|
+      column_num.times do |column|
+        file = current_dir_files[row + pt]
+        if column == (column_num - 1)
+          print "#{file.to_s.ljust(max_str)}\n"
+          pt = 0
+        else
+          print "#{file.to_s.ljust(max_str)}"
+          pt += row_nums[column]
+          if row == (row_num - 1) && column == (mod - 1)
+            print "\n"
+            break
+          end
+        end
       end
     end
-  end
-
-  ordered_files.each_with_index do |file, idx|
-    if (idx % column_num) == (column_num - 1) # 出力時に最終列で改行する
-      print "#{file.to_s.ljust(max_str)}\n"
-    else
-      print "#{file.to_s.ljust(max_str)}"
+  else
+    pt = 0
+    row_num.times do |row|
+      column_num.times do |column|
+        file = current_dir_files[row + pt]
+        if column == (column_num - 1)
+          print "#{file.to_s.ljust(max_str)}\n"
+          pt = 0
+        else
+          print "#{file.to_s.ljust(max_str)}"
+          pt += row_num
+        end
+      end
     end
   end
 else
   current_dir_files.each do |file|
     print "#{file.to_s.ljust(max_str)}"
   end
-  print "\n" # 最終要素の出力後に改行する
+  print "\n"
 end
