@@ -6,16 +6,16 @@ max_str = current_dir_files.map(&:length).max + 2 # ファイル名の最大文�
 if files_num > column_num # 列数よりファイル数の方が多い場合は、垂直ソートしてから出力する
   # 列数に合わせてファイル名一覧の配列を分割
   if files_num % column_num  != 0
-    split_length = (files_num / column_num ) + 1
+    row_num = (files_num / column_num ) + 1
   else
-    split_length = files_num / column_num 
+    row_num = files_num / column_num 
   end
 
-  split_array = current_dir_files.each_slice(split_length).to_a
+  split_array = current_dir_files.each_slice(row_num).to_a
 
   # 垂直ソートした配列を生成
   ordered_files = []
-  split_length.times do |i|
+  row_num.times do |i|
     column_num.times do |j|
       if !split_array[j].nil? && !split_array[j][i].nil?
         ordered_files << split_array[j][i]
