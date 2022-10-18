@@ -13,6 +13,14 @@ class ListSegment
   def row_num
     size / column_num
   end
+
+  def calc_max_string(add_space=2)
+    @dir.map(&:length).max + add_space
+  end
+
+  def create_rom_num_array
+    Array.new(column_num, row_num)
+  end
 end
 
 column_num = 3 # 出力列数
