@@ -30,6 +30,25 @@ class ListSegment
     end
   end
 
+  def print_multiline(pt=0)
+    row_num.times do |row|
+      column_num.times do |column|
+        file = dir[row + pt]
+        if column == (column_num - 1)
+          print "#{file.to_s.ljust(max_str)}\n"
+          pt = 0
+        else
+          print "#{file.to_s.ljust(max_str)}"
+          pt += row_nums[column]
+          if mod != 0 && row == (row_num - 1) && column == (mod - 1)
+            print "\n"
+            break
+          end
+        end
+      end
+    end
+  end
+
   def print_oneline
     dir.each do |file|
       print "#{file.to_s.ljust(max_str)}"
@@ -42,37 +61,9 @@ class ListSegment
       if mod != 0
         update_row_nums
         add_row
-        pt = 0
-        row_num.times do |row|
-          column_num.times do |column|
-            file = dir[row + pt]
-            if column == (column_num - 1)
-              print "#{file.to_s.ljust(max_str)}\n"
-              pt = 0
-            else
-              print "#{file.to_s.ljust(max_str)}"
-              pt += row_nums[column]
-              if row == (row_num - 1) && column == (mod - 1)
-                print "\n"
-                break
-              end
-            end
-          end
-        end
+        print_multiline
       else
-        pt = 0
-        row_num.times do |row|
-          column_num.times do |column|
-            file = dir[row + pt]
-            if column == (column_num - 1)
-              print "#{file.to_s.ljust(max_str)}\n"
-              pt = 0
-            else
-              print "#{file.to_s.ljust(max_str)}"
-              pt += row_nums[column]
-            end
-          end
-        end
+        print_multiline
       end
     else
       print_oneline
