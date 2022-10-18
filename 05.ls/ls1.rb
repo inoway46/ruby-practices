@@ -24,6 +24,13 @@ class ListSegment
     size % @column_num
   end
 
+  def print_oneline
+    dir.each do |file|
+      print "#{file.to_s.ljust(max_str)}"
+    end
+    print "\n"
+  end
+
   def output
     if size > column_num
       if mod != 0
@@ -64,10 +71,7 @@ class ListSegment
         end
       end
     else
-      dir.each do |file|
-        print "#{file.to_s.ljust(max_str)}"
-      end
-      print "\n"
+      print_oneline
     end    
   end
 end
