@@ -24,6 +24,12 @@ class ListSegment
     size % @column_num
   end
 
+  def update_row_nums
+    mod.times do |i|
+      row_nums[i] = row_nums[i] + 1
+    end
+  end
+
   def print_oneline
     dir.each do |file|
       print "#{file.to_s.ljust(max_str)}"
@@ -34,9 +40,7 @@ class ListSegment
   def output
     if size > column_num
       if mod != 0
-        mod.times do |i|
-          row_nums[i] = row_nums[i] + 1
-        end
+        update_row_nums
         add_row
         pt = 0
         row_num.times do |row|
