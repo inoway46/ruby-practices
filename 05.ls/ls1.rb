@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
 class ListSegment
-  attr_accessor :dir, :column_num, :mod, :row_num, :row_nums
+  attr_accessor :dir, :column_num, :size, :mod, :row_num, :row_nums
 
   def initialize(column_num = 3, pattern = '*')
     @column_num = column_num
     @dir = Dir.glob(pattern)
+    @size = @dir.size
     @mod = size % @column_num
     @row_num = size / @column_num
     @row_nums = Array.new(@column_num, @row_num)
   end
 
-  def size
-    @dir.size
+  def output
+    update_row_nums if mod != 0
+    print_files
   end
+
+  private
 
   def max_str(add_space = 2)
     @dir.map(&:length).max + add_space
@@ -44,12 +48,7 @@ class ListSegment
       end
     end
   end
-
-  def output
-    update_row_nums if mod != 0
-    print_files
-  end
-
-  ls = ListSegment.new
-  ls.output
 end
+
+ls = ListSegment.new
+ls.output
