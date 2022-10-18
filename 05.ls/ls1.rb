@@ -67,4 +67,7 @@ class ListSegment
       print_oneline
     end
   end
+
+  ls = ListSegment.new
+  ls.output
 end
