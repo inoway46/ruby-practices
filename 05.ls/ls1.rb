@@ -1,3 +1,20 @@
+class ListSegment
+  attr_accessor :dir, :column_num
+
+  def initialize(column_num, pattern="*")
+    @column_num = column_num
+    @dir = Dir.glob(pattern)
+  end
+
+  def size
+    @dir.size
+  end
+
+  def row_num
+    size / column_num
+  end
+end
+
 column_num = 3 # 出力列数
 current_dir_files = Dir.glob("*").sort # ファイル一覧の読み込み
 files_num = current_dir_files.size # ファイル数
