@@ -3,7 +3,7 @@
 class ListSegment
   attr_accessor :dir, :column_num, :row_num, :row_nums
 
-  def initialize(column_num, pattern = '*')
+  def initialize(column_num = 3, pattern = '*')
     @column_num = column_num
     @dir = Dir.glob(pattern)
     @row_num = size / @column_num
