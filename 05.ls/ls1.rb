@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ListSegment
-  attr_accessor :dir, :column_num, :size, :mod, :row_num, :row_nums
+  attr_reader :column_num, :dir, :size, :mod, :row_num, :row_nums
 
   def initialize(column_num = 3, pattern = '*')
     @column_num = column_num
