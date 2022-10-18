@@ -1,3 +1,7 @@
 test*
 *txt
 0ls1.rb
+.bundle
+vendor
+Gemfile*
+.rubocop*
