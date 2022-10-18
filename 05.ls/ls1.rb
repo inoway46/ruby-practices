@@ -3,10 +3,10 @@ current_dir_files = Dir.glob("*").sort # ファイル一覧の読み込み
 files_num = current_dir_files.size # ファイル数
 max_str = current_dir_files.map(&:length).max + 2 # ファイル名の最大文字数
 row_num = files_num / column_num # 出力行数
+row_nums = Array.new(column_num, row_num) # 各列の行数
 
 if files_num > column_num
   if files_num % column_num  != 0
-    row_nums = Array.new(column_num, row_num)
     mod = files_num % column_num
     mod.times do |i|
       row_nums[i] = row_nums[i] + 1
@@ -39,7 +39,7 @@ if files_num > column_num
           pt = 0
         else
           print "#{file.to_s.ljust(max_str)}"
-          pt += row_num
+          pt += row_nums[column]
         end
       end
     end
