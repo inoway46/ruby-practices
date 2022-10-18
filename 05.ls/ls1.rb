@@ -1,5 +1,5 @@
 class ListSegment
-  attr_accessor :dir, :size, :column_num, :row_num, :row_nums, :max_str, :output
+  attr_accessor :dir, :column_num, :row_num, :row_nums
 
   def initialize(column_num, pattern="*")
     @column_num = column_num
