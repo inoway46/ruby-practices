@@ -19,7 +19,7 @@ class ListSegment
     @dir.map(&:length).max + add_space
   end
 
-  def update_row_nums(add = 1)
+  def update_row_nums
     mod.times do |i|
       row_nums[i] = row_nums[i] + 1
     end
