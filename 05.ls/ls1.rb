@@ -3,9 +3,9 @@
 class ListSegment
   attr_reader :column_num, :dir, :size, :mod, :row_num, :row_nums
 
-  def initialize(column_num = 3, pattern = '*')
+  def initialize(option = '', column_num = 3)
     @column_num = column_num
-    @dir = Dir.glob(pattern)
+    @dir = fetch_file_names(option)
     @size = @dir.size
     @mod = size % @column_num
     @row_num = size / @column_num
@@ -18,6 +18,15 @@ class ListSegment
   end
 
   private
+
+  def fetch_file_names(option)
+    case option
+    when '-a'
+      Dir.entries(Dir.pwd).sort
+    else
+      Dir.glob('*').sort
+    end
+  end
 
   def max_str(add_space = 2)
     @dir.map(&:length).max + add_space
@@ -50,5 +59,9 @@ class ListSegment
   end
 end
 
-ls = ListSegment.new
-ls.output
+def ls(option = '')
+  ls = ListSegment.new(option)
+  ls.output
+end
+
+ls(ARGV[0])
