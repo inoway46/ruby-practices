@@ -1,21 +1,16 @@
 # frozen_string_literal: true
+
 require 'optparse'
 
-class AddOption
+class Option
+  attr_reader :options
+
   def initialize
     @options = {}
     OptionParser.new do |option|
       option.on('-a') { |v| @options[:select_all_files] = v }
       option.parse!(ARGV)
     end
-  end
-
-  def has?(name)
-    @options.include?(name)
-  end
-
-  def get(name)
-    @options[name]
   end
 end
 
@@ -24,8 +19,7 @@ class ListSegment
 
   def initialize(column_num = 3)
     @column_num = column_num
-    @options = {}
-    set_options
+    @options = set_options
     set_files
     set_values
   end
@@ -38,10 +32,8 @@ class ListSegment
   private
 
   def set_options
-    option = AddOption.new
-    if option.has?(:select_all_files)
-      @options[:select_all_files] = true
-    end
+    opt = Option.new
+    opt.options
   end
 
   def set_files
