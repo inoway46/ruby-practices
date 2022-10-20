@@ -5,7 +5,7 @@ class AddOption
   def initialize
     @options = {}
     OptionParser.new do |option|
-      option.on('-a') { |v| @options[:all] = v }
+      option.on('-a') { |v| @options[:select_all_files] = v }
       option.parse!(ARGV)
     end
   end
@@ -20,11 +20,26 @@ class AddOption
 end
 
 class ListSegment
-  attr_reader :column_num, :dir, :size, :mod, :row_num, :row_nums
+  attr_reader :column_num, :options, :dir, :size, :mod, :row_num, :row_nums
 
-  def initialize(option = '', column_num = 3)
+  def initialize(column_num = 3)
     @column_num = column_num
-    @dir = fetch_file_names(option)
+    @options = {}
+  end
+
+  def set_options
+    option = AddOption.new
+    if option.has?(:select_all_files)
+      @options[:select_all_files] = true
+    end
+    @options
+  end
+
+  def fetch_files(options)
+    @dir = fetch_file_names(options)
+  end
+
+  def set_values
     @size = @dir.size
     @mod = size % @column_num
     @row_num = size / @column_num
@@ -38,9 +53,8 @@ class ListSegment
 
   private
 
-  def fetch_file_names(option)
-    case option
-    when 'all'
+  def fetch_file_names(options)
+    if options[:select_all_files]
       Dir.entries(Dir.pwd).sort
     else
       Dir.glob('*').sort
@@ -78,16 +92,12 @@ class ListSegment
   end
 end
 
-def ls(option = '')
-  ls = ListSegment.new(option)
+def ls
+  ls = ListSegment.new
+  options = ls.set_options
+  ls.fetch_files(options)
+  ls.set_values
   ls.output
 end
 
-options = AddOption.new
-if options.has?(:all)
-  option = 'all'
-else
-  option = ''
-end
-
-ls(option)
+ls
