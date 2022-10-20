@@ -1,4 +1,23 @@
 # frozen_string_literal: true
+require 'optparse'
+
+class AddOption
+  def initialize
+    @options = {}
+    OptionParser.new do |option|
+      option.on('-a') { |v| @options[:all] = v }
+      option.parse!(ARGV)
+    end
+  end
+
+  def has?(name)
+    @options.include?(name)
+  end
+
+  def get(name)
+    @options[name]
+  end
+end
 
 class ListSegment
   attr_reader :column_num, :dir, :size, :mod, :row_num, :row_nums
@@ -21,7 +40,7 @@ class ListSegment
 
   def fetch_file_names(option)
     case option
-    when '-a'
+    when 'all'
       Dir.entries(Dir.pwd).sort
     else
       Dir.glob('*').sort
@@ -64,4 +83,11 @@ def ls(option = '')
   ls.output
 end
 
-ls(ARGV[0])
+options = AddOption.new
+if options.has?(:all)
+  option = 'all'
+else
+  option = ''
+end
+
+ls(option)
