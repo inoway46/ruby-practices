@@ -25,25 +25,9 @@ class ListSegment
   def initialize(column_num = 3)
     @column_num = column_num
     @options = {}
-  end
-
-  def set_options
-    option = AddOption.new
-    if option.has?(:select_all_files)
-      @options[:select_all_files] = true
-    end
-    @options
-  end
-
-  def fetch_files(options)
-    @dir = fetch_file_names(options)
-  end
-
-  def set_values
-    @size = @dir.size
-    @mod = size % @column_num
-    @row_num = size / @column_num
-    @row_nums = Array.new(@column_num, @row_num)
+    set_options
+    set_files
+    set_values
   end
 
   def output
@@ -53,7 +37,25 @@ class ListSegment
 
   private
 
-  def fetch_file_names(options)
+  def set_options
+    option = AddOption.new
+    if option.has?(:select_all_files)
+      @options[:select_all_files] = true
+    end
+  end
+
+  def set_files
+    @dir = fetch_file_names
+  end
+
+  def set_values
+    @size = @dir.size
+    @mod = size % @column_num
+    @row_num = size / @column_num
+    @row_nums = Array.new(@column_num, @row_num)
+  end
+
+  def fetch_file_names
     if options[:select_all_files]
       Dir.entries(Dir.pwd).sort
     else
@@ -94,9 +96,6 @@ end
 
 def ls
   ls = ListSegment.new
-  options = ls.set_options
-  ls.fetch_files(options)
-  ls.set_values
   ls.output
 end
 
