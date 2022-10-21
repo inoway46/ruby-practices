@@ -17,9 +17,9 @@ end
 class ListSegment
   attr_reader :column_num, :options, :dir, :size, :mod, :row_num, :row_nums
 
-  def initialize(column_num = 3)
+  def initialize(options = {}, column_num = 3)
     @column_num = column_num
-    @options = set_options
+    @options = options
     set_files
     set_values
   end
@@ -30,11 +30,6 @@ class ListSegment
   end
 
   private
-
-  def set_options
-    opt = Option.new
-    opt.options
-  end
 
   def set_files
     @dir = fetch_file_names
@@ -87,7 +82,8 @@ class ListSegment
 end
 
 def ls
-  ls = ListSegment.new
+  opt = Option.new
+  ls = ListSegment.new(opt.options)
   ls.output
 end
 
