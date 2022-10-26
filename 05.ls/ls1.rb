@@ -1,20 +1,32 @@
 # frozen_string_literal: true
 
 class ListSegment
-  attr_reader :column_num, :dir, :size, :mod, :row_num, :row_nums
+  attr_reader :column_num, :dir
 
   def initialize(column_num = 3, pattern = '*')
     @column_num = column_num
     @dir = Dir.glob(pattern)
-    @size = @dir.size
-    @mod = size % @column_num
-    @row_num = size / @column_num
-    @row_nums = Array.new(@column_num, @row_num)
+  end
+
+  def size
+    @dir.size
+  end
+
+  def mod
+    size % @column_num
+  end
+
+  def row_num
+    row_num = size / @column_num
+  end
+
+  def row_nums
+    Array.new(@column_num, row_num)
   end
 
   def output
-    update_row_nums if mod != 0
-    print_files
+    update_row_nums(mod, row_nums, row_num) if mod != 0
+    print_files(mod, row_num, row_nums)
   end
 
   private
@@ -23,14 +35,14 @@ class ListSegment
     @dir.map(&:length).max + add_space
   end
 
-  def update_row_nums
+  def update_row_nums(mod, row_nums, row_num)
     mod.times do |i|
       row_nums[i] = row_nums[i] + 1
     end
-    @row_num = row_num + 1
+    row_num = row_num + 1
   end
 
-  def print_files(leap_num = 0)
+  def print_files(mod, row_num, row_nums, leap_num = 0)
     row_num.times do |row|
       column_num.times do |column|
         file = dir[row + leap_num]
