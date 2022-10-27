@@ -39,9 +39,10 @@ class ListSegment
     @dir.map(&:length).max + add_space
   end
 
-  def print_files(row_nums, leap_num = 0)
+  def print_files(row_nums)
     row_num = row_nums.first
     row_num.times do |row|
+      leap_num = 0
       column_num.times do |column|
         file = dir[row + leap_num]
         print file.to_s.ljust(max_str).to_s
@@ -49,7 +50,6 @@ class ListSegment
         break if row == (row_num - 1) && column == (mod - 1)
       end
       print "\n"
-      leap_num = 0
     end
   end
 end
