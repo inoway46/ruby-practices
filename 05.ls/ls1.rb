@@ -15,16 +15,12 @@ class ListSegment
 
   private
 
-  def size
-    @dir.size
-  end
-
   def mod
-    size % @column_num
+    @dir.size % @column_num
   end
 
   def calc_row_num
-    size / @column_num
+    @dir.size / @column_num
   end
 
   def generate_row_nums(row_num)
