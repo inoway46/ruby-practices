@@ -40,7 +40,7 @@ class ListSegment
   end
 
   def print_files(row_nums, leap_num = 0)
-    row_num = row_nums[0]
+    row_num = row_nums.first
     row_num.times do |row|
       column_num.times do |column|
         file = dir[row + leap_num]
