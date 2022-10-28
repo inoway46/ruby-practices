@@ -9,8 +9,8 @@ class ListSegment
   end
 
   def output
-    row_nums = generate_row_nums(calc_row_num)
-    print_files(row_nums)
+    row_num = calc_row_num
+    print_files(row_num)
   end
 
   private
@@ -20,30 +20,20 @@ class ListSegment
   end
 
   def calc_row_num
-    @dir.size / @column_num
-  end
-
-  def generate_row_nums(row_num)
-    row_nums = Array.new(@column_num, row_num)
-    mod.times do |i|
-      row_nums[i] = row_nums[i] + 1
-    end
-    row_nums
+    (@dir.size / @column_num) + mod
   end
 
   def max_str(add_space = 2)
     @dir.map(&:length).max + add_space
   end
 
-  def print_files(row_nums)
-    row_num = row_nums.first
+  def print_files(row_num)
     row_num.times do |row|
-      leap_num = 0
       column_num.times do |column|
-        file = dir[row + leap_num]
+        file = dir[column * row_num + row]
+        break if file.nil?
+
         print file.to_s.ljust(max_str).to_s
-        leap_num += row_nums[column]
-        break if row == (row_num - 1) && column == (mod - 1)
       end
       print "\n"
     end
