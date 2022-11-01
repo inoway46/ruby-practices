@@ -15,32 +15,20 @@ class Option
 end
 
 class ListSegment
-  attr_reader :column_num, :options, :dir, :size, :mod, :row_num, :row_nums
+  attr_reader :options, :column_num, :dir
 
   def initialize(options = {}, column_num = 3)
-    @column_num = column_num
     @options = options
-    set_files
-    set_values
-  end
-
-  def output
-    update_row_nums if mod != 0
-    print_files
-  end
-
-  private
-
-  def set_files
+    @column_num = column_num
     @dir = fetch_file_names
   end
 
-  def set_values
-    @size = @dir.size
-    @mod = size % @column_num
-    @row_num = size / @column_num
-    @row_nums = Array.new(@column_num, @row_num)
+  def output
+    row_num = calc_row_num
+    print_files(row_num)
   end
+
+  private
 
   def fetch_file_names
     if options[:select_all_files]
@@ -50,41 +38,31 @@ class ListSegment
     end
   end
 
+  def mod
+    @dir.size % @column_num
+  end
+
+  def calc_row_num
+    (@dir.size / @column_num) + mod
+  end
+
   def max_str(add_space = 2)
     @dir.map(&:length).max + add_space
   end
 
-  def update_row_nums
-    mod.times do |i|
-      row_nums[i] = row_nums[i] + 1
-    end
-    @row_num = row_num + 1
-  end
-
-  def print_files(leap_num = 0)
+  def print_files(row_num)
     row_num.times do |row|
       column_num.times do |column|
-        file = dir[row + leap_num]
-        if column == (column_num - 1)
-          print "#{file.to_s.ljust(max_str)}\n"
-          leap_num = 0
-        else
-          print file.to_s.ljust(max_str).to_s
-          leap_num += row_nums[column]
-          if mod != 0 && row == (row_num - 1) && column == (mod - 1)
-            print "\n"
-            break
-          end
-        end
+        file = dir[column * row_num + row]
+        break if file.nil?
+
+        print file.to_s.ljust(max_str).to_s
       end
+      print "\n"
     end
   end
 end
 
-def ls
-  opt = Option.new
-  ls = ListSegment.new(opt.options)
-  ls.output
-end
-
-ls
+opt = Option.new
+ls = ListSegment.new(opt.options)
+ls.output
