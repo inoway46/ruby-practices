@@ -1,11 +1,26 @@
 # frozen_string_literal: true
 
-class ListSegment
-  attr_reader :column_num, :dir
+require 'optparse'
 
-  def initialize(column_num = 3, pattern = '*')
+class Option
+  attr_reader :options
+
+  def initialize
+    @options = {}
+    OptionParser.new do |option|
+      option.on('-a') { |v| @options[:select_all_files] = v }
+      option.parse!(ARGV)
+    end
+  end
+end
+
+class ListSegment
+  attr_reader :options, :column_num, :dir
+
+  def initialize(options = {}, column_num = 3)
+    @options = options
     @column_num = column_num
-    @dir = Dir.glob(pattern)
+    @dir = fetch_file_names
   end
 
   def output
@@ -14,6 +29,14 @@ class ListSegment
   end
 
   private
+
+  def fetch_file_names
+    if options[:select_all_files]
+      Dir.entries(Dir.pwd).sort
+    else
+      Dir.glob('*').sort
+    end
+  end
 
   def mod
     @dir.size % @column_num
@@ -40,5 +63,6 @@ class ListSegment
   end
 end
 
-ls = ListSegment.new
+opt = Option.new
+ls = ListSegment.new(opt.options)
 ls.output
