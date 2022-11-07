@@ -15,8 +15,6 @@ class Option
 end
 
 class ListSegment
-  attr_reader :options, :column_num, :dir
-
   def initialize(options = {}, column_num = 3)
     @options = options
     @column_num = column_num
@@ -31,7 +29,7 @@ class ListSegment
   private
 
   def fetch_file_names
-    if options[:select_all_files]
+    if @options[:select_all_files]
       Dir.entries(Dir.pwd).sort
     else
       Dir.glob('*').sort
@@ -52,8 +50,8 @@ class ListSegment
 
   def print_files(row_num)
     row_num.times do |row|
-      column_num.times do |column|
-        file = dir[column * row_num + row]
+      @column_num.times do |column|
+        file = @dir[column * row_num + row]
         break if file.nil?
 
         print file.to_s.ljust(max_str).to_s
