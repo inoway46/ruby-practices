@@ -30,7 +30,7 @@ class ListSegment
 
   def fetch_file_names
     if @options[:select_all_files]
-      Dir.entries(Dir.pwd).sort
+      Dir.glob('*', File::FNM_DOTMATCH).sort
     else
       Dir.glob('*').sort
     end
