@@ -18,7 +18,7 @@ class ListSegment
   def initialize(options = {}, column_num = 3)
     @options = options
     @column_num = column_num
-    @files = Dir.glob('*', add_pattern_match_args).sort
+    @files = Dir.glob('*', set_pattern_match_args).sort
   end
 
   def output
@@ -28,7 +28,7 @@ class ListSegment
 
   private
 
-  def add_pattern_match_args
+  def set_pattern_match_args
     return File::FNM_DOTMATCH if @options[:select_all_files]
 
     0
