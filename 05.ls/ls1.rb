@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+NO_OPTION = 0
 
 class Option
   attr_reader :options
@@ -16,9 +17,8 @@ end
 
 class ListSegment
   def initialize(options = {}, column_num = 3)
-    @options = options
     @column_num = column_num
-    @files = Dir.glob('*', set_pattern_match_args).sort
+    @files = Dir.glob('*', to_fnm(options)).sort
   end
 
   def output
@@ -28,10 +28,10 @@ class ListSegment
 
   private
 
-  def set_pattern_match_args
-    return File::FNM_DOTMATCH if @options[:select_all_files]
+  def to_fnm(options)
+    return File::FNM_DOTMATCH if options[:select_all_files]
 
-    0
+    NO_OPTION
   end
 
   def mod
