@@ -18,7 +18,7 @@ class ListSegment
   def initialize(options = {}, column_num = 3)
     @options = options
     @column_num = column_num
-    @dir = fetch_file_names
+    @dir = Dir.glob('*', parse_file_option).sort
   end
 
   def output
@@ -28,12 +28,10 @@ class ListSegment
 
   private
 
-  def fetch_file_names
-    if @options[:select_all_files]
-      Dir.glob('*', File::FNM_DOTMATCH).sort
-    else
-      Dir.glob('*').sort
-    end
+  def parse_file_option
+    return File::FNM_DOTMATCH if @options[:select_all_files]
+
+    0
   end
 
   def mod
