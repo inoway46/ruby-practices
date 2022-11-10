@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
-NO_OPTION = 0
+NO_FILE_OPTION = 0
 
 class Option
   attr_reader :options
@@ -29,9 +29,7 @@ class ListSegment
   private
 
   def to_fnm(options)
-    return File::FNM_DOTMATCH if options[:select_all_files]
-
-    NO_OPTION
+    options[:select_all_files] ? File::FNM_DOTMATCH : NO_FILE_OPTION
   end
 
   def mod
