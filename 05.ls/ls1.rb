@@ -10,6 +10,7 @@ class Option
     @options = {}
     OptionParser.new do |option|
       option.on('-a') { |v| @options[:select_all_files] = v }
+      option.on('-r') { |v| @options[:reverse_sort] = v }
       option.parse!(ARGV)
     end
   end
@@ -18,7 +19,7 @@ end
 class ListSegment
   def initialize(options = {}, column_num = 3)
     @column_num = column_num
-    @files = Dir.glob('*', to_fnm(options)).sort
+    @files = files_sort(Dir.glob('*', to_fnm(options)), options)
   end
 
   def output
@@ -30,6 +31,10 @@ class ListSegment
 
   def to_fnm(options)
     options[:select_all_files] ? File::FNM_DOTMATCH : NO_FILE_OPTION
+  end
+
+  def files_sort(files, options)
+    options[:reverse_sort] ? files.sort.reverse : files.sort
   end
 
   def mod
