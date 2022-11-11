@@ -19,7 +19,7 @@ end
 class ListSegment
   def initialize(options = {}, column_num = 3)
     @column_num = column_num
-    @files = files_sort(Dir.glob('*', to_fnm(options)), options)
+    @files = sort_files(Dir.glob('*', to_fnm(options)), options)
   end
 
   def output
@@ -33,7 +33,7 @@ class ListSegment
     options[:select_all_files] ? File::FNM_DOTMATCH : NO_FILE_OPTION
   end
 
-  def files_sort(files, options)
+  def sort_files(files, options)
     options[:reverse_sort] ? files.sort.reverse : files.sort
   end
 
