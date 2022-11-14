@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'byebug'
 require 'optparse'
 NO_FILE_OPTION = 0
 
