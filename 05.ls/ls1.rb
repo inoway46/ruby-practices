@@ -53,6 +53,25 @@ class ListSegment
     file_types[stat.ftype]
   end
 
+  def to_permission_str(stat)
+    permit_array = (stat.mode.to_s(8).to_i % 1000).to_s.split('')
+    permit_array.map { |octal| to_ls_permission_style(octal) }.join
+  end
+
+  def to_ls_permission_style(octal)
+    permission_patterns = {
+      '0' => '---',
+      '1' => '--x',
+      '2' => '-w-',
+      '3' => '-wx',
+      '4' => 'r--',
+      '5' => 'r-x',
+      '6' => 'rw-',
+      '7' => 'rwx'
+    }
+    permission_patterns[octal]
+  end
+
   def sort_files(files, options)
     options[:reverse_sort] ? files.sort.reverse : files.sort
   end
@@ -89,6 +108,8 @@ class ListSegment
     puts "total #{calc_total_block_size}"
     @stats.each do |stat|
       print to_file_type_str(stat)
+      print to_permission_str(stat)
+      print "\n"
     end
   end
 end
