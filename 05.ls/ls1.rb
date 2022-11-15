@@ -25,9 +25,13 @@ class ListSegment
     @stats = to_stats(@files) if options[:long_format]
   end
 
-  def output
-    row_num = calc_row_num
-    print_files(row_num)
+  def output(options)
+    if options[:long_format]
+      output_files_in_long_format
+    else
+      row_num = calc_row_num
+      output_files(row_num)
+    end
   end
 
   private
@@ -56,11 +60,15 @@ class ListSegment
     (@files.size / @column_num) + mod
   end
 
+  def calc_total_block_size
+    @stats.map(&:blocks).inject(:+)
+  end
+
   def max_str(add_space = 2)
     @files.map(&:length).max + add_space
   end
 
-  def print_files(row_num)
+  def output_files(row_num)
     row_num.times do |row|
       @column_num.times do |column|
         file = @files[column * row_num + row]
@@ -71,8 +79,12 @@ class ListSegment
       print "\n"
     end
   end
+
+  def output_files_in_long_format
+    puts "total #{calc_total_block_size}"
+  end
 end
 
 opt = Option.new
 ls = ListSegment.new(opt.options)
-ls.output
+ls.output(opt.options)
