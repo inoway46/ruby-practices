@@ -48,6 +48,11 @@ class ListSegment
     files.map { |file| File.lstat(file) }
   end
 
+  def to_file_type_str(stat)
+    file_types = { 'file' => '-', 'directory' => 'd', 'link' => 'l' }
+    file_types[stat.ftype]
+  end
+
   def sort_files(files, options)
     options[:reverse_sort] ? files.sort.reverse : files.sort
   end
@@ -82,6 +87,9 @@ class ListSegment
 
   def output_files_in_long_format
     puts "total #{calc_total_block_size}"
+    @stats.each do |stat|
+      print to_file_type_str(stat)
+    end
   end
 end
 
