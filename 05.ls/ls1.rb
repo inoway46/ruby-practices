@@ -111,7 +111,7 @@ class ListSegment
     @stats.map(&:blocks).inject(:+)
   end
 
-  def max_str(add_space = 2)
+  def count_max_file_name_str(add_space = 2)
     @files.map(&:length).max + add_space
   end
 
@@ -129,7 +129,7 @@ class ListSegment
         file = @files[column * row_num + row]
         break if file.nil?
 
-        print file.to_s.ljust(max_str).to_s
+        print file.to_s.ljust(count_max_file_name_str).to_s
       end
       print "\n"
     end
