@@ -2,6 +2,7 @@
 
 require 'byebug'
 require 'optparse'
+require 'etc'
 NO_FILE_OPTION = 0
 
 class Option
@@ -72,6 +73,14 @@ class ListSegment
     permission_patterns[octal]
   end
 
+  def to_owner_name(stat)
+    Etc.getpwuid(stat.uid).name
+  end
+
+  def to_group_name(stat)
+    Etc.getgrgid(stat.gid).name
+  end
+
   def sort_files(files, options)
     options[:reverse_sort] ? files.sort.reverse : files.sort
   end
@@ -92,6 +101,10 @@ class ListSegment
     @files.map(&:length).max + add_space
   end
 
+  def count_max_digit(stats)
+    stats.map(&:size).max.abs.to_s.size
+  end
+
   def output_files(row_num)
     row_num.times do |row|
       @column_num.times do |column|
@@ -105,10 +118,20 @@ class ListSegment
   end
 
   def output_files_in_long_format
-    puts "total #{calc_total_block_size}"
+    puts "total #{calc_total_block_size}" # ブロックサイズの合計
+    max_digit = count_max_digit(@stats)
     @stats.each do |stat|
-      print to_file_type_str(stat)
-      print to_permission_str(stat)
+      print to_file_type_str(stat) # ファイルタイプ
+      print to_permission_str(stat) # パーミッション
+      print '  '
+      print stat.nlink # ハードリンク数
+      print ' '
+      print to_owner_name(stat) # オーナー名
+      print '  '
+      print to_group_name(stat) # グループ名
+      print '  '
+      printf("%#{max_digit}d", stat.size) # バイトサイズ（最大値の桁数で右詰め）
+      print ' '
       print "\n"
     end
   end
