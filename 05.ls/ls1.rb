@@ -141,7 +141,7 @@ class ListSegment
     max_bitesize_digit = count_max_bitesize_digit(@stats)
     @stats.each_with_index do |stat, index|
       print to_file_type_str(stat) # ファイルタイプ
-      print to_permission_str(stat) # パーミッション
+      print to_permission_str(stat).ljust(9) # パーミッション
       print '  '
       printf("%#{max_nlink_digit}d", stat.nlink) # ハードリンク数
       print ' '
