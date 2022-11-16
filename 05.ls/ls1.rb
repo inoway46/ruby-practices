@@ -119,6 +119,10 @@ class ListSegment
     stats.map { |stat| to_owner_name(stat).length }.max
   end
 
+  def count_max_group_name_str(stats)
+    stats.map { |stat| to_group_name(stat).length }.max
+  end
+
   def count_max_nlink_digit(stats)
     stats.map(&:nlink).max.abs.to_s.size
   end
@@ -144,6 +148,7 @@ class ListSegment
     max_nlink_digit = count_max_nlink_digit(@stats)
     max_bitesize_digit = count_max_bitesize_digit(@stats)
     max_owner_name_str = count_max_owner_name_str(@stats)
+    max_group_name_str = count_max_group_name_str(@stats)
     @stats.each_with_index do |stat, index|
       print to_file_type_str(stat) # ファイルタイプ
       print to_permission_str(stat).ljust(9) # パーミッション
@@ -152,7 +157,7 @@ class ListSegment
       print ' '
       print to_owner_name(stat).ljust(max_owner_name_str) # オーナー名
       print '  '
-      print to_group_name(stat) # グループ名
+      print to_group_name(stat).ljust(max_group_name_str) # グループ名
       print '  '
       printf("%#{max_bitesize_digit}d", stat.size) # バイトサイズ（最大値の桁数で右詰め）
       print ' '
