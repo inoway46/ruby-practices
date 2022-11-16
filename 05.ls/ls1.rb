@@ -115,7 +115,11 @@ class ListSegment
     @files.map(&:length).max + add_space
   end
 
-  def count_max_digit(stats)
+  def count_max_nlink_digit(stats)
+    stats.map(&:nlink).max.abs.to_s.size
+  end
+
+  def count_max_bitesize_digit(stats)
     stats.map(&:size).max.abs.to_s.size
   end
 
@@ -133,18 +137,19 @@ class ListSegment
 
   def output_files_in_long_format
     puts "total #{calc_total_block_size}" # ブロックサイズの合計
-    max_digit = count_max_digit(@stats)
+    max_nlink_digit = count_max_nlink_digit(@stats)
+    max_bitesize_digit = count_max_bitesize_digit(@stats)
     @stats.each_with_index do |stat, index|
       print to_file_type_str(stat) # ファイルタイプ
       print to_permission_str(stat) # パーミッション
       print '  '
-      print stat.nlink # ハードリンク数
+      printf("%#{max_nlink_digit}d", stat.nlink) # ハードリンク数
       print ' '
       print to_owner_name(stat) # オーナー名
       print '  '
       print to_group_name(stat) # グループ名
       print '  '
-      printf("%#{max_digit}d", stat.size) # バイトサイズ（最大値の桁数で右詰め）
+      printf("%#{max_bitesize_digit}d", stat.size) # バイトサイズ（最大値の桁数で右詰め）
       print ' '
       print to_timestamp(stat) # タイムスタンプ（最終更新時刻）
       print ' '
