@@ -90,6 +90,11 @@ class ListSegment
     today > modify_time && modify_time >= half_year_ago ? modify_time.strftime('%_m %_d %H:%M') : modify_time.strftime('%_m %_d %_Y')
   end
 
+  def to_symlink_style(symlink)
+    origin = File.readlink(symlink)
+    "#{symlink} -> #{origin}"
+  end
+
   def sort_files(files, options)
     options[:reverse_sort] ? files.sort.reverse : files.sort
   end
@@ -129,7 +134,7 @@ class ListSegment
   def output_files_in_long_format
     puts "total #{calc_total_block_size}" # ブロックサイズの合計
     max_digit = count_max_digit(@stats)
-    @stats.each do |stat|
+    @stats.each_with_index do |stat, index|
       print to_file_type_str(stat) # ファイルタイプ
       print to_permission_str(stat) # パーミッション
       print '  '
@@ -142,6 +147,9 @@ class ListSegment
       printf("%#{max_digit}d", stat.size) # バイトサイズ（最大値の桁数で右詰め）
       print ' '
       print to_timestamp(stat) # タイムスタンプ（最終更新時刻）
+      print ' '
+      file = @files[index]
+      print stat.symlink? ? to_symlink_style(file) : file  # ファイル名
       print "\n"
     end
   end
