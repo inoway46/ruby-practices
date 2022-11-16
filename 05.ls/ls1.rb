@@ -3,6 +3,7 @@
 require 'byebug'
 require 'optparse'
 require 'etc'
+require 'date'
 NO_FILE_OPTION = 0
 
 class Option
@@ -81,6 +82,14 @@ class ListSegment
     Etc.getgrgid(stat.gid).name
   end
 
+  def to_timestamp(stat)
+    modify_time = stat.mtime.to_datetime
+    today = DateTime.now
+    half_year_ago = today - 180
+    # 半年前〜現在時刻までの変更日時のファイルは時刻表示、それ以外は年表示
+    today > modify_time && modify_time >= half_year_ago ? modify_time.strftime('%_m %_d %H:%M') : modify_time.strftime('%_m %_d %_Y')
+  end
+
   def sort_files(files, options)
     options[:reverse_sort] ? files.sort.reverse : files.sort
   end
@@ -132,6 +141,7 @@ class ListSegment
       print '  '
       printf("%#{max_digit}d", stat.size) # バイトサイズ（最大値の桁数で右詰め）
       print ' '
+      print to_timestamp(stat) # タイムスタンプ（最終更新時刻）
       print "\n"
     end
   end
