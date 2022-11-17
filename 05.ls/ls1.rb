@@ -57,7 +57,8 @@ class ListSegment
 
   def to_permission_str(stat)
     permit_array = (stat.mode.to_s(8).to_i % 1000).to_s.split('')
-    permit_array.map { |octal| to_ls_permission_style(octal) }.join
+    permission_str = permit_array.map { |octal| to_ls_permission_style(octal) }.join
+    stat.sticky? ? to_sticky_bit(permission_str) : permission_str
   end
 
   def to_ls_permission_style(octal)
@@ -72,6 +73,12 @@ class ListSegment
       '7' => 'rwx'
     }
     permission_patterns[octal]
+  end
+
+  def to_sticky_bit(permission_str)
+    array = permission_str.split('')
+    array.pop == 'x' ? array.push('t') : array.push('T')
+    array.join
   end
 
   def to_owner_name(stat)
