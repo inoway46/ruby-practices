@@ -150,12 +150,7 @@ class ListSegment
   end
 
   def output(options)
-    if options[:long_format]
-      output_files_in_long_format
-    else
-      row_num = calc_row_num
-      output_files(row_num)
-    end
+    options[:long_format] ? output_files_in_long_format : output_files
   end
 
   private
@@ -184,7 +179,8 @@ class ListSegment
     @files.map(&:length).max + add_space
   end
 
-  def output_files(row_num)
+  def output_files
+    row_num = calc_row_num
     row_num.times do |row|
       @column_num.times do |column|
         file = @files[column * row_num + row]
