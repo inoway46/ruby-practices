@@ -144,27 +144,28 @@ class ListSegment
   include LongOption::Output
 
   def initialize(options = {}, column_num = 3)
-    @column_num = set_column_num(column_num, options)
-    @files = sort_files(Dir.glob('*', to_fnm(options)), options)
+    @options = options
+    @column_num = column_num(column_num)
+    @files = sort_files(Dir.glob('*', to_fnm))
     @stats = to_stats(@files) if options[:long_format]
   end
 
-  def output(options)
-    options[:long_format] ? output_files_in_long_format : output_files
+  def output
+    @options[:long_format] ? output_files_in_long_format : output_files
   end
 
   private
 
-  def set_column_num(column_num, options)
-    options[:long_format] ? 1 : column_num
+  def column_num(column_num)
+    @options[:long_format] ? 1 : column_num
   end
 
-  def to_fnm(options)
-    options[:select_all_files] ? File::FNM_DOTMATCH : NO_FILE_OPTION
+  def to_fnm
+    @options[:select_all_files] ? File::FNM_DOTMATCH : NO_FILE_OPTION
   end
 
-  def sort_files(files, options)
-    options[:reverse_sort] ? files.sort.reverse : files.sort
+  def sort_files(files)
+    @options[:reverse_sort] ? files.sort.reverse : files.sort
   end
 
   def mod
@@ -195,4 +196,4 @@ end
 
 opt = Option.new
 ls = ListSegment.new(opt.options)
-ls.output(opt.options)
+ls.output
