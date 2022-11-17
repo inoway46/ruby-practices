@@ -20,7 +20,7 @@ class Option
   end
 end
 
-module LongOption
+module LongFormat
   module Converter
     def to_stats(files)
       files.map { |file| File.lstat(file) }
@@ -139,9 +139,9 @@ module LongOption
 end
 
 class ListSegment
-  include LongOption::Converter
-  include LongOption::Counter
-  include LongOption::Output
+  include LongFormat::Converter
+  include LongFormat::Counter
+  include LongFormat::Output
 
   def initialize(options = {}, column_num = 3)
     @options = options
