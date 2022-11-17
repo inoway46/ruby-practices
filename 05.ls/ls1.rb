@@ -124,17 +124,13 @@ module LongOption
   module Output
     def output_files_in_long_format
       puts "total #{calc_total_block_size}" # ブロックサイズの合計
-      max_nlink_digit = count_max_nlink_digit(@stats)
-      max_bitesize_digit = count_max_bitesize_digit(@stats)
-      max_owner_name_str = count_max_owner_name_str(@stats)
-      max_group_name_str = count_max_group_name_str(@stats)
       @stats.each_with_index do |stat, index|
         print to_file_type_str(stat) # ファイルタイプ
         print "#{to_permission_str(stat).ljust(9)}  " # パーミッション
-        print "#{stat.nlink.to_s.rjust(max_nlink_digit)} " # ハードリンク数
-        print "#{to_owner_name(stat).ljust(max_owner_name_str)}  " # オーナー名
-        print "#{to_group_name(stat).ljust(max_group_name_str)}  " # グループ名
-        print "#{stat.size.to_s.rjust(max_bitesize_digit)} " # バイトサイズ（最大値の桁数で右詰め）
+        print "#{stat.nlink.to_s.rjust(count_max_nlink_digit(@stats))} " # ハードリンク数
+        print "#{to_owner_name(stat).ljust(count_max_owner_name_str(@stats))}  " # オーナー名
+        print "#{to_group_name(stat).ljust(count_max_group_name_str(@stats))}  " # グループ名
+        print "#{stat.size.to_s.rjust(count_max_bitesize_digit(@stats))} " # バイトサイズ（最大値の桁数で右詰め）
         print "#{to_timestamp(stat)} " # タイムスタンプ（最終更新時刻）
         puts stat.symlink? ? to_symlink_style(@files[index]) : @files[index]  # ファイル名
       end
