@@ -90,11 +90,11 @@ class ListSegment
   end
 
   def to_timestamp(stat)
-    modified_time = stat.mtime.to_datetime
+    modification_time = stat.mtime.to_datetime
     today = DateTime.now
     half_year_ago = today - 180
     # 半年前〜現在時刻までの変更日時のファイルは時刻表示、それ以外は年表示
-    today > modified_time && modified_time >= half_year_ago ? modified_time.strftime('%_m %_d %H:%M') : modified_time.strftime('%_m %_d %_Y')
+    today > modification_time && modification_time >= half_year_ago ? modification_time.strftime('%_m %_d %H:%M') : modification_time.strftime('%_m %_d %_Y')
   end
 
   def to_symlink_style(symlink)
