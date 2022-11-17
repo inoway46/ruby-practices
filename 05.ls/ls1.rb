@@ -99,8 +99,8 @@ module LongOption
     end
   end
 
-  module Calculator
-    def calc_total_block_size
+  module Counter
+    def count_total_block_size
       @stats.map(&:blocks).inject(:+)
     end
 
@@ -123,7 +123,7 @@ module LongOption
 
   module Output
     def output_files_in_long_format
-      puts "total #{calc_total_block_size}" # ブロックサイズの合計
+      puts "total #{count_total_block_size}" # ブロックサイズの合計
       @stats.each_with_index do |stat, index|
         print to_file_type_str(stat) # ファイルタイプ
         print "#{to_permission_str(stat).ljust(9)}  " # パーミッション
@@ -140,7 +140,7 @@ end
 
 class ListSegment
   include LongOption::Converter
-  include LongOption::Calculator
+  include LongOption::Counter
   include LongOption::Output
 
   def initialize(options = {}, column_num = 3)
