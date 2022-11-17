@@ -58,7 +58,15 @@ class ListSegment
   def to_permission_str(stat)
     permit_array = (stat.mode.to_s(8).to_i % 1000).to_s.chars
     permission_str = permit_array.map { |octal| to_ls_permission_style(octal) }.join
-    stat.sticky? ? to_sticky_bit(permission_str) : permission_str
+    if stat.sticky?
+      to_sticky_bit(permission_str)
+    elsif stat.setuid?
+      to_uid_str(permission_str)
+    elsif stat.setgid?
+      to_gid_str(permission_str)
+    else
+      permission_str
+    end
   end
 
   def to_ls_permission_style(octal)
@@ -78,6 +86,18 @@ class ListSegment
   def to_sticky_bit(permission_str)
     array = permission_str.chars
     array.pop == 'x' ? array.push('t') : array.push('T')
+    array.join
+  end
+
+  def to_uid_str(permission_str)
+    array = permission_str.chars
+    array[2] = array[2] == 'x' ? 's' : 'S'
+    array.join
+  end
+
+  def to_gid_str(permission_str)
+    array = permission_str.chars
+    array[5] = array[5] == 'x' ? 's' : 'S'
     array.join
   end
 
