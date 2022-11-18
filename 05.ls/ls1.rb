@@ -145,7 +145,7 @@ class ListSegment
 
   def initialize(options = {}, column_num = 3)
     @options = options
-    @column_num = column_num(column_num)
+    @column_num = column_num
     @files = sort_files(Dir.glob('*', to_fnm))
     @stats = to_stats(@files) if options[:long_format]
   end
@@ -155,10 +155,6 @@ class ListSegment
   end
 
   private
-
-  def column_num(column_num)
-    @options[:long_format] ? 1 : column_num
-  end
 
   def to_fnm
     @options[:select_all_files] ? File::FNM_DOTMATCH : NO_FILE_OPTION
