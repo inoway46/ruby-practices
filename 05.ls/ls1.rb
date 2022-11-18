@@ -22,6 +22,39 @@ end
 
 module LongFormat
   module Converter
+    PERMISSION_PATTERNS = {
+      '0' => '---',
+      '1' => '--x',
+      '2' => '-w-',
+      '3' => '-wx',
+      '4' => 'r--',
+      '5' => 'r-x',
+      '6' => 'rw-',
+      '7' => 'rwx'
+    }.freeze
+
+    UID_PERMISSION_PATTERNS = {
+      '0' => '--S',
+      '1' => '--s',
+      '2' => '-wS',
+      '3' => '-ws',
+      '4' => 'r-S',
+      '5' => 'r-s',
+      '6' => 'rwS',
+      '7' => 'rws'
+    }.freeze
+
+    STICKY_PERMISSION_PATTERNS = {
+      '0' => '--T',
+      '1' => '--t',
+      '2' => '-wT',
+      '3' => '-wt',
+      '4' => 'r-T',
+      '5' => 'r-t',
+      '6' => 'rwT',
+      '7' => 'rwt'
+    }.freeze
+
     def to_stats(files)
       files.map { |file| File.lstat(file) }
     end
@@ -33,48 +66,26 @@ module LongFormat
 
     def to_permission_str(stat)
       permit_array = (stat.mode.to_s(8).to_i % 1000).to_s.chars
-      permission_str = permit_array.map { |octal| to_ls_permission_style(octal) }.join
-      if stat.setuid?
-        to_uid_str(permission_str)
-      elsif stat.setgid?
-        to_gid_str(permission_str)
-      elsif stat.sticky?
-        to_sticky_bit(permission_str)
-      else
-        permission_str
-      end
+      owner_permittion_octal = permit_array[0]
+      group_permittion_octal = permit_array[1]
+      other_permittion_octal = permit_array[2]
+
+      owner = stat.setuid? ? to_uid_permission_style(owner_permittion_octal) : to_permission_style(owner_permittion_octal)
+      group = stat.setgid? ? to_uid_permission_style(group_permittion_octal) : to_permission_style(group_permittion_octal)
+      other = stat.sticky? ? to_sticky_permission_style(other_permittion_octal) : to_permission_style(other_permittion_octal)
+      owner + group + other
     end
 
-    def to_ls_permission_style(octal)
-      permission_patterns = {
-        '0' => '---',
-        '1' => '--x',
-        '2' => '-w-',
-        '3' => '-wx',
-        '4' => 'r--',
-        '5' => 'r-x',
-        '6' => 'rw-',
-        '7' => 'rwx'
-      }
-      permission_patterns[octal]
+    def to_permission_style(octal)
+      PERMISSION_PATTERNS[octal]
     end
 
-    def to_uid_str(permission_str)
-      array = permission_str.chars
-      array[2] = array[2] == 'x' ? 's' : 'S'
-      array.join
+    def to_uid_permission_style(octal)
+      UID_PERMISSION_PATTERNS[octal]
     end
 
-    def to_gid_str(permission_str)
-      array = permission_str.chars
-      array[5] = array[5] == 'x' ? 's' : 'S'
-      array.join
-    end
-
-    def to_sticky_bit(permission_str)
-      array = permission_str.chars
-      array[8] = array[8] == 'x' ? 't' : 'T'
-      array.join
+    def to_sticky_permission_style(octal)
+      STICKY_PERMISSION_PATTERNS[octal]
     end
 
     def to_owner_name(stat)
