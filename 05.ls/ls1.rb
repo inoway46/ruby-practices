@@ -101,7 +101,7 @@ module LongFormat
 
   module Counter
     def count_total_block_size
-      @stats.map(&:blocks).inject(:+)
+      @stats.map(&:blocks).sum
     end
 
     def count_max_owner_name_str(stats)
