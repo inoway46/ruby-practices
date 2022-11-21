@@ -66,9 +66,7 @@ module LongFormat
 
     def to_permission_str(stat)
       permit_array = (stat.mode.to_s(8).to_i % 1000).to_s.chars
-      owner_permittion_octal = permit_array[0]
-      group_permittion_octal = permit_array[1]
-      other_permittion_octal = permit_array[2]
+      owner_permittion_octal, group_permittion_octal, other_permittion_octal = permit_array
 
       owner = stat.setuid? ? to_uid_permission_style(owner_permittion_octal) : to_permission_style(owner_permittion_octal)
       group = stat.setgid? ? to_uid_permission_style(group_permittion_octal) : to_permission_style(group_permittion_octal)
@@ -138,6 +136,7 @@ module LongFormat
       @stats.each_with_index do |stat, index|
         print to_file_type_str(stat) # ファイルタイプ
         print "#{to_permission_str(stat).ljust(9)}  " # パーミッション
+        print stat.mode.to_s(8)
         print "#{stat.nlink.to_s.rjust(count_max_nlink_digit(@stats))} " # ハードリンク数
         print "#{to_owner_name(stat).ljust(count_max_owner_name_str(@stats))}  " # オーナー名
         print "#{to_group_name(stat).ljust(count_max_group_name_str(@stats))}  " # グループ名
