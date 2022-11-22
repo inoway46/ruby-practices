@@ -20,9 +20,42 @@ class Option
 end
 
 module ListSegment
-  class NormalFormat
-    NO_FILE_OPTION = 0
+  NO_FILE_OPTION = 0
 
+  PERMISSION_PATTERNS = {
+    '0' => '---',
+    '1' => '--x',
+    '2' => '-w-',
+    '3' => '-wx',
+    '4' => 'r--',
+    '5' => 'r-x',
+    '6' => 'rw-',
+    '7' => 'rwx'
+  }.freeze
+
+  UID_PERMISSION_PATTERNS = {
+    '0' => '--S',
+    '1' => '--s',
+    '2' => '-wS',
+    '3' => '-ws',
+    '4' => 'r-S',
+    '5' => 'r-s',
+    '6' => 'rwS',
+    '7' => 'rws'
+  }.freeze
+
+  STICKY_PERMISSION_PATTERNS = {
+    '0' => '--T',
+    '1' => '--t',
+    '2' => '-wT',
+    '3' => '-wt',
+    '4' => 'r-T',
+    '5' => 'r-t',
+    '6' => 'rwT',
+    '7' => 'rwt'
+  }.freeze
+
+  class NormalFormat
     def initialize(options = {}, column_num = 3)
       @options = options
       @column_num = column_num
@@ -67,39 +100,6 @@ module ListSegment
   end
 
   class LongFormat < NormalFormat
-    PERMISSION_PATTERNS = {
-      '0' => '---',
-      '1' => '--x',
-      '2' => '-w-',
-      '3' => '-wx',
-      '4' => 'r--',
-      '5' => 'r-x',
-      '6' => 'rw-',
-      '7' => 'rwx'
-    }.freeze
-
-    UID_PERMISSION_PATTERNS = {
-      '0' => '--S',
-      '1' => '--s',
-      '2' => '-wS',
-      '3' => '-ws',
-      '4' => 'r-S',
-      '5' => 'r-s',
-      '6' => 'rwS',
-      '7' => 'rws'
-    }.freeze
-
-    STICKY_PERMISSION_PATTERNS = {
-      '0' => '--T',
-      '1' => '--t',
-      '2' => '-wT',
-      '3' => '-wt',
-      '4' => 'r-T',
-      '5' => 'r-t',
-      '6' => 'rwT',
-      '7' => 'rwt'
-    }.freeze
-
     def initialize(options = {})
       super
       @stats = to_stats(@files)
@@ -115,7 +115,7 @@ module ListSegment
         print "#{to_group_name(stat).ljust(count_max_group_name_str(@stats))}  " # グループ名
         print "#{stat.size.to_s.rjust(count_max_bitesize_digit(@stats))} " # バイトサイズ（最大値の桁数で右詰め）
         print "#{to_timestamp(stat)} " # タイムスタンプ（最終更新時刻）
-        puts stat.symlink? ? to_symlink_style(@files[index]) : @files[index]  # ファイル名
+        puts stat.symlink? ? to_symlink_style(@files[index]) : @files[index] # ファイル名
       end
     end
 
