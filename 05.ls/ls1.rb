@@ -55,7 +55,7 @@ module ListSegment
     '7' => 'rwt'
   }.freeze
 
-  class NormalFormat
+  class DefaultFormat
     def initialize(options = {}, column_num = 3)
       @options = options
       @column_num = column_num
@@ -99,7 +99,7 @@ module ListSegment
     end
   end
 
-  class LongFormat < NormalFormat
+  class LongFormat < DefaultFormat
     def initialize(options = {})
       super
       @stats = to_stats(@files)
@@ -196,5 +196,5 @@ module ListSegment
 end
 
 opt = Option.new
-ls = opt.options[:long_format] ? ListSegment::LongFormat.new(opt.options) : ListSegment::NormalFormat.new(opt.options)
+ls = opt.options[:long_format] ? ListSegment::LongFormat.new(opt.options) : ListSegment::DefaultFormat.new(opt.options)
 ls.output
