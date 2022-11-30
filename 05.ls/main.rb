@@ -5,5 +5,5 @@ require_relative 'ls_modules/default_format'
 require_relative 'ls_modules/long_format'
 
 opt = ListSegment::Option.new
-ls = opt.options[:long_format] ? ListSegment::LongFormat.new(opt.options) : ListSegment::DefaultFormat.new(opt.options)
+ls = opt.long_format? ? ListSegment::LongFormat.new(opt) : ListSegment::DefaultFormat.new(opt)
 ls.output

@@ -15,5 +15,17 @@ module ListSegment
         option.parse!(ARGV)
       end
     end
+
+    def select_all_files?
+      options[:select_all_files]
+    end
+
+    def reverse_sort?
+      options[:reverse_sort]
+    end
+
+    def long_format?
+      options[:long_format]
+    end
   end
 end
