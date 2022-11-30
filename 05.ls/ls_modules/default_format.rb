@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
+require_relative 'file_option'
+
 module ListSegment
   class DefaultFormat
-    NO_FILE_OPTION = 0
+    include FileOption
 
     def initialize(options = {}, column_num = 3)
       @options = options
       @column_num = column_num
       @files = sort_files(Dir.glob('*', to_fnm))
-      @stats = to_stats(@files) if options[:long_format]
     end
 
     def output
@@ -25,14 +26,6 @@ module ListSegment
     end
 
     private
-
-    def to_fnm
-      @options[:select_all_files] ? File::FNM_DOTMATCH : NO_FILE_OPTION
-    end
-
-    def sort_files(files)
-      @options[:reverse_sort] ? files.sort.reverse : files.sort
-    end
 
     def mod
       @files.size % @column_num

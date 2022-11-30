@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'default_format'
+require_relative 'file_option'
 require 'etc'
 require 'date'
 
 module ListSegment
-  class LongFormat < DefaultFormat
+  class LongFormat
+    include FileOption
+
     PERMISSION_PATTERNS = {
       '0' => '---',
       '1' => '--x',
@@ -40,7 +42,8 @@ module ListSegment
     }.freeze
 
     def initialize(options = {})
-      super
+      @options = options
+      @files = sort_files(Dir.glob('*', to_fnm))
       @stats = to_stats(@files)
     end
 
