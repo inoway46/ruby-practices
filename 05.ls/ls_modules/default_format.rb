@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'constant'
-
 module ListSegment
   class DefaultFormat
-    include Constant
+    NO_FILE_OPTION = 0
 
     def initialize(options = {}, column_num = 3)
       @options = options
