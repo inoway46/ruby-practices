@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-Dir["#{File.dirname(__FILE__)}/ls_modules/*.rb"].sort.each { |file| require file }
+require_relative 'ls_modules/option'
+require_relative 'ls_modules/default_format'
+require_relative 'ls_modules/long_format'
 
 opt = ListSegment::Option.new
 ls = opt.options[:long_format] ? ListSegment::LongFormat.new(opt.options) : ListSegment::DefaultFormat.new(opt.options)
