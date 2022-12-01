@@ -4,8 +4,6 @@ require 'optparse'
 
 module ListSegment
   class Option
-    attr_reader :options
-
     def initialize
       @options = {}
       OptionParser.new do |option|
@@ -17,15 +15,15 @@ module ListSegment
     end
 
     def select_all_files?
-      options[:select_all_files]
+      @options[:select_all_files]
     end
 
     def reverse_sort?
-      options[:reverse_sort]
+      @options[:reverse_sort]
     end
 
     def long_format?
-      options[:long_format]
+      @options[:long_format]
     end
   end
 end
